@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: e-shop
+  datasource:
+    url: jdbc:mysql://localhost:3306/e_shop
+    username: root
+    password: zikans@19
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    showSql:
+      true
+    properties:
+      hibernate:
+        format-sql:
+          true
+server:
+  port:
+    9191
