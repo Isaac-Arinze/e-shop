@@ -1,6 +1,7 @@
 package com.zikan.e_shop.service.product;
 
 import com.zikan.e_shop.exception.ProductNotFoundException;
+import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
 import com.zikan.e_shop.model.Category;
 import com.zikan.e_shop.model.Product;
 import com.zikan.e_shop.repository.CategoryRepository;
@@ -49,23 +50,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long id) {
 
-        return productRepository.findById(id).orElseThrow(()-> new ProductNotFoundException("Product NOt Found"));
+        return productRepository.findById(id).orElseThrow(()-> new ResourceNotFoundExcepion("Product NOt Found"));
 
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id).ifPresentOrElse(productRepository :: delete,
-                ()-> {throw new ProductNotFoundException("Product not found!");});
+                ()-> {throw new ResourceNotFoundExcepion("Product not found!");});
 
     }
 
     @Override
     public Product updateProduct(ProductUpdateRequest request, Long productId) {
         return productRepository.findById(productId)
-                .map(existingProduct -> updateExistingProduct(existingProduct.request))
+                .map(existingProduct -> updateExistingProduct(existingProduct, request))
                 .map(productRepository :: save)
-                .orElseThrow(()-> new ProductNotFoundException ("Product Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundExcepion("Product Not Found"));
 
 
 
