@@ -1,15 +1,18 @@
 package com.zikan.e_shop.service.product;
 
-import com.zikan.e_shop.exception.ProductNotFoundException;
+import com.zikan.e_shop.dto.ImageDto;
+import com.zikan.e_shop.dto.ProductDto;
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
 import com.zikan.e_shop.model.Category;
+import com.zikan.e_shop.model.Image;
 import com.zikan.e_shop.model.Product;
 import com.zikan.e_shop.repository.CategoryRepository;
+import com.zikan.e_shop.repository.ImageRepository;
 import com.zikan.e_shop.repository.ProductRepository;
 import com.zikan.e_shop.request.AddProductRequest;
 import com.zikan.e_shop.request.ProductUpdateRequest;
-import jdk.jfr.Frequency;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +24,9 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+
+    private final ModelMapper modelMapper;
     @Override
     public Product addProduct(AddProductRequest request) {
 
@@ -122,4 +128,21 @@ public class ProductServiceImpl implements ProductService {
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
     }
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    //converting d image class to ImageDto associated with the productId
+    @Override
+    public ProductDto convertToDto(Product product) {
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+        productDto.setImages(imageDtos);
+        return productDto;
+
+    }
+
+
 }

@@ -26,7 +26,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class ImageController {
 
     private final ImageService imageService;
-    @PostMapping
+    @PostMapping("/upload")
     public ResponseEntity<APIResponse> saveImages(List<MultipartFile> files, Long productId) {
 
         try {
@@ -40,7 +40,7 @@ public class ImageController {
     }
 
     @GetMapping("/image/download/{imageId}")
-    public ResponseEntity<Resource> downloadImage (Long imageId) throws SQLException {
+    public ResponseEntity<Resource> downloadImage (@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
         ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))

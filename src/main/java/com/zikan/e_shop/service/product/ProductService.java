@@ -1,5 +1,6 @@
 package com.zikan.e_shop.service.product;
 
+import com.zikan.e_shop.dto.ProductDto;
 import com.zikan.e_shop.model.Product;
 import com.zikan.e_shop.request.AddProductRequest;
 import com.zikan.e_shop.request.ProductUpdateRequest;
@@ -22,4 +23,8 @@ public interface ProductService {
     Long countProductsByBrandAndName (String brand, String name);
 
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    //converting d image class to ImageDto associated with the productId
+    ProductDto convertToDto(Product product);
 }
