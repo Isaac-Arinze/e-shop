@@ -19,35 +19,35 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartController {
     private final CartService cartService;
 
-    @GetMapping("/{cartId}/cart")
-    public ResponseEntity<APIResponse> getCart (@PathVariable Long cartId) {
+    @GetMapping("/{cartId}/my-cart")
+    public ResponseEntity<APIResponse> getCart(@PathVariable Long cartId) {
         try {
 
             Cart cart = cartService.getCart(cartId);
             return ResponseEntity.ok(new APIResponse("Suceess", cart));
-        }
-        catch (ResourceNotFoundExcepion e){
+        } catch (ResourceNotFoundExcepion e) {
             return ResponseEntity.status(NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         }
     }
+
     @DeleteMapping("/{cartId}/clear")
-    public ResponseEntity<APIResponse> clearCart (@PathVariable Long cartId){
-        try{
-        cartService.clearCart(cartId);
-        return ResponseEntity.ok(new APIResponse("Cart successfully cleared", null));
-    } catch (ResourceNotFoundExcepion e){
+    public ResponseEntity<APIResponse> clearCart(@PathVariable Long cartId) {
+        try {
+            cartService.clearCart(cartId);
+            return ResponseEntity.ok(new APIResponse("Cart successfully cleared", null));
+        } catch (ResourceNotFoundExcepion e) {
             return ResponseEntity.status(NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         }
 
     }
-    @GetMapping("/{cartId/cart/total-price}")
-    public ResponseEntity<APIResponse> getTotalAmount (@PathVariable Long cartId){
+
+    @GetMapping("/{cartId}/cart/total-price")
+    public ResponseEntity<APIResponse> getTotalAmount(@PathVariable Long cartId) {
 
         try {
             BigDecimal totalPrice = cartService.getTotalPrice(cartId);
             return ResponseEntity.ok(new APIResponse("Total price", totalPrice));
-        }
-        catch (ResourceNotFoundExcepion e){
+        } catch (ResourceNotFoundExcepion e) {
             return ResponseEntity.status(NOT_FOUND).body(new APIResponse(e.getMessage(), null));
         }
 
