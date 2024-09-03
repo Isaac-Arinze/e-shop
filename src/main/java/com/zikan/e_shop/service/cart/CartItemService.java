@@ -1,5 +1,6 @@
 package com.zikan.e_shop.service.cart;
 
+import com.zikan.e_shop.model.Cart;
 import com.zikan.e_shop.model.CartItem;
 
 public interface CartItemService {
@@ -10,4 +11,6 @@ public interface CartItemService {
 
     //using helper methos
     CartItem getCartItem(Long cartId, Long productId);
+
+
 }

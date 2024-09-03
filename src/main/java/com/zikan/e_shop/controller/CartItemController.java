@@ -2,9 +2,12 @@ package com.zikan.e_shop.controller;
 
 
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
+import com.zikan.e_shop.model.Cart;
+import com.zikan.e_shop.model.User;
 import com.zikan.e_shop.response.APIResponse;
 import com.zikan.e_shop.service.cart.CartItemService;
 import com.zikan.e_shop.service.cart.CartService;
+import com.zikan.e_shop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +22,19 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class CartItemController {
     private final CartItemService cartItemService;
     private final CartService cartService;
+    private final UserService userService;
 
     @PostMapping("/item/add")
-    public ResponseEntity<APIResponse> addItemToCart(@RequestParam (required = false) Long cartId,
+    public ResponseEntity<APIResponse> addItemToCart( // @RequestParam (required = false) Long cartId,
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
 
         try {
-            if (cartId == null){
-                cartId = cartService.initializeNewCart();
-            }
+            User user = userService.getUserById(1L);
+               Cart cart = cartService.initializeNewCart(user);
 
-            cartItemService.addItemToCart(cartId, productId, quantity);
+
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
 
             return ResponseEntity.ok(new APIResponse("Cart added successfully", null));
 

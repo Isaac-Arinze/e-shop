@@ -14,12 +14,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    showSql:
-      true
+    showSql: true
     properties:
       hibernate:
-        format-sql:
-          true
+        format-sql: true
 server:
   port:
     9191
