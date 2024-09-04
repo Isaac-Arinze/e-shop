@@ -27,7 +27,8 @@ public class OrderController {
 
         try {
             Order order = orderService.placeOrder(orderId);
-            return ResponseEntity.ok(new APIResponse("Item order success", order));
+            OrderDto orderDto = orderService.convertToDto(order);
+            return ResponseEntity.ok(new APIResponse("Item order success", orderDto));
         } catch (ResourceNotFoundExcepion e) {
             return ResponseEntity.status(NOT_FOUND).body(new APIResponse("Error Occured!", e.getMessage()));
         }

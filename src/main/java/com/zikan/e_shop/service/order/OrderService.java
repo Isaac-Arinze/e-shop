@@ -14,4 +14,6 @@ public interface OrderService {
     List<OrderDto> getUserOrders(Long userId);
 
     Cart getCartByUserId(Long userId);
+
+    OrderDto convertToDto(Order order);
 }

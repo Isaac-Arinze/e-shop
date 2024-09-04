@@ -2,6 +2,7 @@ package com.zikan.e_shop.service.product;
 
 import com.zikan.e_shop.dto.ImageDto;
 import com.zikan.e_shop.dto.ProductDto;
+import com.zikan.e_shop.exception.AlreadyExistsExcption;
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
 import com.zikan.e_shop.model.Category;
 import com.zikan.e_shop.model.Image;
@@ -30,6 +31,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product addProduct(AddProductRequest request) {
 
+        if (productExists(request.getName(), request.getBrand()))
+        {
+            throw new AlreadyExistsExcption(request.getBrand() + " "+request.getName() + " Already Exists, kindly update products");
+        }
         //check if d category is found hin d db
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(()-> {
@@ -39,6 +44,12 @@ public class ProductServiceImpl implements ProductService {
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
     }
+//create a helper mtd to only update quantity of similar product added to cart
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name, brand);
+    }
+
+
 //Helper method
     private Product createProduct(AddProductRequest request, Category category){
 

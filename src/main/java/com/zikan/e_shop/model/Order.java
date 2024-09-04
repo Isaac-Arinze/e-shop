@@ -22,7 +22,7 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long OrderId;
+    private Long orderId;
     private LocalDate orderDate;
     private BigDecimal totalAmount;
     @Enumerated(EnumType.STRING)

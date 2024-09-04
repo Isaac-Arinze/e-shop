@@ -2,6 +2,7 @@ package com.zikan.e_shop.controller;
 
 
 import com.zikan.e_shop.dto.ProductDto;
+import com.zikan.e_shop.exception.AlreadyExistsExcption;
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
 import com.zikan.e_shop.model.Product;
 import com.zikan.e_shop.request.AddProductRequest;
@@ -15,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -57,8 +57,8 @@ public class ProductController {
             Product theProduct = productService.addProduct(product);
             var productDto = productService.convertToDto(theProduct);
             return ResponseEntity.ok(new APIResponse("Product successfully added", productDto));
-        } catch (ResourceNotFoundExcepion e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse(e.getMessage(), null));
+        } catch (AlreadyExistsExcption e) {
+            return ResponseEntity.status(CONFLICT).body(new APIResponse(e.getMessage(), null));
         }
     }
 

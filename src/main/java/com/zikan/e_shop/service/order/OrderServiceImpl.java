@@ -1,6 +1,7 @@
 package com.zikan.e_shop.service.order;
 
 import com.zikan.e_shop.dto.OrderDto;
+import com.zikan.e_shop.dto.OrderItemDto;
 import com.zikan.e_shop.enums.OrderStatus;
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
 import com.zikan.e_shop.model.*;
@@ -90,8 +91,22 @@ public class OrderServiceImpl implements OrderService{
 
 
     //helper mtd for toconvertOrderObjectToDto
-    private OrderDto convertToDto (Order order){
-        return modelMapper.map(order, OrderDto.class);
+
+//    @Override
+//    public OrderDto convertToDto(Order order){
+//        return modelMapper.map(order, OrderDto.class);
+//    }
+
+    @Override
+    public OrderDto convertToDto(Order order) {
+        OrderDto orderDto = modelMapper.map(order, OrderDto.class);
+        // Convert order items to order item DTOs
+        List<OrderItemDto> orderItemDtos = order.getOrderItem().stream()
+                .map(orderItem -> modelMapper.map(orderItem, OrderItemDto.class))
+                .toList();
+        orderDto.setItems(orderItemDtos);
+
+        return orderDto;
     }
 
 
