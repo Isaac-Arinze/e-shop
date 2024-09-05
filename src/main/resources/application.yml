@@ -1,4 +1,9 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   application:
     name: e-shop
   datasource:
@@ -9,12 +14,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    showSql:
-      true
+    showSql: true
     properties:
       hibernate:
-        format-sql:
-          true
+        format-sql: true
 server:
   port:
     9191
+
+api:
+  prefix:
+    api/v1
+
+auth:
+  token:
+    jwt-secret: 8e3f0b1d5d2a4c8b92e1fc1a765bf2434d6c72e6f5b943e2c1c1e2d6b4db7a21
+    jwt-expiration: 36000000
