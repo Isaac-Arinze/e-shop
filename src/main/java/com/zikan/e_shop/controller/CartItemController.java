@@ -8,6 +8,7 @@ import com.zikan.e_shop.response.APIResponse;
 import com.zikan.e_shop.service.cart.CartItemService;
 import com.zikan.e_shop.service.cart.CartService;
 import com.zikan.e_shop.service.user.UserService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/carts")
+@RequestMapping("${api.prefix}/cartItems")
 public class CartItemController {
     private final CartItemService cartItemService;
     private final CartService cartService;
@@ -30,7 +32,7 @@ public class CartItemController {
                                                      @RequestParam Integer quantity) {
 
         try {
-            User user = userService.getUserById(1L);
+            User user = userService.getAuthenticationUser();
                Cart cart = cartService.initializeNewCart(user);
 
 
@@ -40,7 +42,10 @@ public class CartItemController {
 
         } catch (ResourceNotFoundExcepion e) {
             return ResponseEntity.status(NOT_FOUND).body(new APIResponse(e.getMessage(), null));
+        }catch (JwtException e){
+            return ResponseEntity.status(UNAUTHORIZED).body(new APIResponse(e.getMessage(), null));
         }
+
     }
 
     @DeleteMapping("/cart/{cartId}/item/{itemId}/remove")

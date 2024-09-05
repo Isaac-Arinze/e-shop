@@ -25,3 +25,8 @@ server:
 api:
   prefix:
     api/v1
+
+auth:
+  token:
+    jwt-secret: 8e3f0b1d5d2a4c8b92e1fc1a765bf2434d6c72e6f5b943e2c1c1e2d6b4db7a21
+    jwt-expiration: 36000000

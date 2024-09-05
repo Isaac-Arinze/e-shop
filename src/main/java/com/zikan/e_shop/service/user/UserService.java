@@ -16,4 +16,6 @@ public interface UserService {
 
     //create helper mtd to convert user oBJECT TO dto
     UserDto convertUser(User user);
+
+    User getAuthenticationUser();
 }
