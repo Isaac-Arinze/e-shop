@@ -2,6 +2,7 @@ package com.zikan.e_shop.security.config;
 
 import com.zikan.e_shop.security.jwt.AuthTokenFilter;
 import com.zikan.e_shop.security.jwt.JwtAuthEntryPoint;
+import com.zikan.e_shop.security.jwt.JwtUtils;
 import com.zikan.e_shop.security.user.ShopUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,8 @@ import java.util.List;
 public class ShopConfig {
     private final ShopUserDetailsService userDetailsService;
     private final JwtAuthEntryPoint authEntryPoint;
+
+    private final  JwtUtils jwtUtils;
     private static final List<String> SECURED_URLS = List.of("/api/v1/carts/**", "/api/v1/cartItems/**");
     @Bean
     public ModelMapper modelMapper(){
@@ -40,7 +43,7 @@ public class ShopConfig {
     }
     @Bean
     public AuthTokenFilter authTokenFilter(){
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -55,12 +58,12 @@ public class ShopConfig {
 
     }
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.requestMatchers(SECURED_URLS.toArray(String[]::new)).authenticated()
-                .anyRequest().permitAll());
+                        .anyRequest().permitAll());
         http.authenticationProvider(daoAuthenticationProvider());
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
