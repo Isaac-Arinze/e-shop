@@ -52,7 +52,7 @@ public class JwtUtils {
                 .getBody().getSubject();
     }
 
-    public boolean ValidateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
