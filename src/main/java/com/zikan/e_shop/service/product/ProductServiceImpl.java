@@ -4,6 +4,7 @@ import com.zikan.e_shop.dto.ImageDto;
 import com.zikan.e_shop.dto.ProductDto;
 import com.zikan.e_shop.exception.AlreadyExistsExcption;
 import com.zikan.e_shop.exception.ResourceNotFoundExcepion;
+import com.zikan.e_shop.helper.Helper;
 import com.zikan.e_shop.model.Category;
 import com.zikan.e_shop.model.Image;
 import com.zikan.e_shop.model.Product;
@@ -15,7 +16,10 @@ import com.zikan.e_shop.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -153,6 +157,31 @@ public class ProductServiceImpl implements ProductService {
         productDto.setImages(imageDtos);
         return productDto;
 
+    }
+
+    public  void save (MultipartFile file){
+        try{
+            //check if the file is of excel type
+
+            if (!Helper.checkExcelFormat(file)) {
+
+                throw new IllegalArgumentException("Invalid Excel file format");
+            }
+            List<ProductDto> productDtos = Helper.convertExcelToListOfProduct(file.getInputStream());
+            List<Product> products = new ArrayList<>();
+            for (ProductDto dto : productDtos){
+                Product product = new Product();
+                product.setId(dto.getId());
+                product.setName(dto.getName());
+                product.setDescription(dto.getDescription());
+
+                products.add(product);
+            }
+            this.productRepository.saveAll(products);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 

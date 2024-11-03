@@ -4,6 +4,7 @@ import com.zikan.e_shop.dto.ProductDto;
 import com.zikan.e_shop.model.Product;
 import com.zikan.e_shop.request.AddProductRequest;
 import com.zikan.e_shop.request.ProductUpdateRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public interface ProductService {
     List<Product> getProductsByName (String name);
     List<Product> getProductsByBrandAndName (String brand, String name);
     Long countProductsByBrandAndName (String brand, String name);
+    void save (MultipartFile file);
 
 
     List<ProductDto> getConvertedProducts(List<Product> products);
