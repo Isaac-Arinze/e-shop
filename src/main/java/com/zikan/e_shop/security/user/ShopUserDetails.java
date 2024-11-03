@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -38,6 +39,7 @@ public class ShopUserDetails implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 authorities);
+
 
     }
     @Override

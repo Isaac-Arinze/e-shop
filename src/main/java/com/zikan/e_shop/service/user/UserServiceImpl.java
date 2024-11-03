@@ -11,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +26,15 @@ import java.util.Optional;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("user not found"));
+    }
 
     @Override
     public User getUserById(Long userId) {
@@ -78,6 +89,6 @@ import java.util.Optional;
     public User getAuthenticationUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found"));
     }
 }
